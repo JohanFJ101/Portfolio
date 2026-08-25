@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f9f6ee" />
+    <link
+      rel="preload"
+      href="/assets/anton-regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>Johan Jagalur</title>
+  </head>
+  <body>
+    <div class="page-loader" role="status" aria-label="Loading portfolio">
+      <span class="page-loader__card" aria-hidden="true"></span>
+    </div>
+
+    <main class="hero" aria-label="Johan Jagalur portfolio">
+      <div class="card-stage">
+        <article id="business-card" class="business-card" aria-label="Johan Jagalur business card">
+          <h1 class="business-card__name">Johan Jagalur.</h1>
+
+          <nav class="social-links" aria-label="Social links">
+            <a
+              class="social-link social-link--linkedin"
+              href="https://www.linkedin.com/in/johan-jagalur-8907822b9"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+            >
+              <img src="/assets/figma-image-2.png" alt="" />
+            </a>
+            <a
+              class="social-link social-link--github"
+              href="https://github.com/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+            >
+              <img src="/assets/figma-image-3.png" alt="" />
+            </a>
+          </nav>
+
+          <button
+            class="learn-more"
+            type="button"
+            aria-controls="business-card"
+            aria-expanded="false"
+          >
+            Learn more
+          </button>
+        </article>
+      </div>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
