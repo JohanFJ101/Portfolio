@@ -2,6 +2,8 @@ const card = document.querySelector('.business-card');
 const cardStage = document.querySelector('.card-stage');
 const learnMore = document.querySelector('.learn-more');
 const pageLoader = document.querySelector('.page-loader');
+const themeColor = document.querySelector('meta[name="theme-color"]');
+const themeToggle = document.querySelector('.theme-toggle');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const loaderStartedAt = performance.now();
 
@@ -29,8 +31,6 @@ function renderTilt() {
 
   card.style.setProperty('--rotate-x', `${normalizedY * -10}deg`);
   card.style.setProperty('--rotate-y', `${normalizedX * 12}deg`);
-  card.style.setProperty('--shadow-x', `${20 - normalizedX * 6}px`);
-  card.style.setProperty('--shadow-y', `${22 - normalizedY * 5}px`);
 }
 
 function queueTilt(event) {
@@ -70,8 +70,6 @@ function resetTilt() {
   for (const property of [
     '--rotate-x',
     '--rotate-y',
-    '--shadow-x',
-    '--shadow-y',
   ]) {
     card.style.removeProperty(property);
   }
@@ -99,6 +97,17 @@ window.addEventListener('keydown', (event) => {
   }
 });
 reducedMotion.addEventListener('change', resetTilt);
+
+themeToggle.addEventListener('click', () => {
+  const darkThemeEnabled = document.documentElement.classList.toggle('dark-theme');
+
+  themeToggle.setAttribute('aria-pressed', String(darkThemeEnabled));
+  themeToggle.setAttribute(
+    'aria-label',
+    darkThemeEnabled ? 'Switch to light theme' : 'Switch to dark theme',
+  );
+  themeColor.setAttribute('content', darkThemeEnabled ? '#0c0c0c' : '#f9f6ee');
+});
 
 function hidePageLoader() {
   const minimumDisplayTime = reducedMotion.matches ? 0 : 350;
