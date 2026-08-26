@@ -1,6 +1,5 @@
 const card = document.querySelector('.business-card');
 const cardStage = document.querySelector('.card-stage');
-const learnMore = document.querySelector('.learn-more');
 const pageLoader = document.querySelector('.page-loader');
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeToggle = document.querySelector('.theme-toggle');
@@ -80,17 +79,24 @@ function setExpanded(expanded) {
 
   cardStage.classList.toggle('is-expanded', expanded);
   document.body.classList.toggle('card-expanded', expanded);
-  learnMore.setAttribute('aria-expanded', String(expanded));
-  learnMore.textContent = expanded ? 'Close' : 'Learn more';
+  card.setAttribute('aria-expanded', String(expanded));
+}
+
+function toggleExpanded() {
+  setExpanded(!cardStage.classList.contains('is-expanded'));
+}
+
+function handleCardClick(event) {
+  if (event.target.closest('a')) return;
+
+  toggleExpanded();
 }
 
 card.addEventListener('pointerenter', startTilt);
 card.addEventListener('pointermove', queueTilt);
 card.addEventListener('pointerleave', resetTilt);
 card.addEventListener('pointercancel', resetTilt);
-learnMore.addEventListener('click', () => {
-  setExpanded(!cardStage.classList.contains('is-expanded'));
-});
+card.addEventListener('click', handleCardClick);
 window.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && cardStage.classList.contains('is-expanded')) {
     setExpanded(false);

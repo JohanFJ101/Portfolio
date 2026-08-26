@@ -11,6 +11,20 @@
   --page-background: #f9f6ee;
   --card-background: #0c0c0c;
   --card-foreground: #ffffff;
+  --page-grain-opacity: 0.13;
+  --page-grain-blend: multiply;
+  --card-charcoal-base: #080808;
+  --card-charcoal-mid: #0c0c0c;
+  --card-charcoal-highlight: #161616;
+  --card-charcoal-shadow: #030303;
+  --card-grain-opacity: 0.2;
+  --card-grain-blend: soft-light;
+  --grain-fine: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --grain-coarse: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --toggle-track: #0c0c0c;
+  --toggle-thumb: #ffffff;
+  --toggle-border: #0c0c0c;
+  --toggle-focus: #0c0c0c;
 
   color: var(--card-foreground);
   background: var(--page-background);
@@ -22,6 +36,18 @@
   --page-background: #0c0c0c;
   --card-background: #f9f6ee;
   --card-foreground: #0c0c0c;
+  --page-grain-opacity: 0.1;
+  --page-grain-blend: soft-light;
+  --card-charcoal-base: #f4f0e6;
+  --card-charcoal-mid: #f9f6ee;
+  --card-charcoal-highlight: #fffdf8;
+  --card-charcoal-shadow: #e8e2d4;
+  --card-grain-opacity: 0.12;
+  --card-grain-blend: multiply;
+  --toggle-track: #f9f6ee;
+  --toggle-thumb: #0c0c0c;
+  --toggle-border: #f9f6ee;
+  --toggle-focus: #f9f6ee;
 }
 
 * {
@@ -36,9 +62,36 @@ body {
 }
 
 body {
+  position: relative;
+  z-index: 0;
   min-height: 100svh;
   background: var(--page-background);
   transition: background-color 260ms ease;
+}
+
+body::before,
+body::after {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: '';
+}
+
+body::before {
+  background-image: var(--grain-fine);
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  opacity: var(--page-grain-opacity);
+  mix-blend-mode: var(--page-grain-blend);
+}
+
+body::after {
+  background-image: var(--grain-coarse);
+  background-repeat: repeat;
+  background-size: 320px 320px;
+  opacity: calc(var(--page-grain-opacity) * 0.55);
+  mix-blend-mode: var(--page-grain-blend);
 }
 
 body.card-expanded {
@@ -139,6 +192,8 @@ a {
 }
 
 .hero {
+  position: relative;
+  z-index: 1;
   display: grid;
   min-height: 100svh;
   place-items: center;
@@ -183,6 +238,7 @@ a {
   overflow: hidden;
   border-radius: min(18px, 3.681cqw);
   background: var(--card-background);
+  cursor: pointer;
   transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) scale3d(var(--scale), var(--scale), var(--scale));
   transform-style: preserve-3d;
   transition:
@@ -199,15 +255,16 @@ a {
 .business-card__name {
   position: absolute;
   z-index: 2;
-  bottom: 1.3%;
+  bottom: 2.249%;
   left: 2.249%;
   margin: 0;
   color: var(--card-foreground);
   font-family: 'Anton', sans-serif;
-  font-size: min(43.98px, calc(13.088vw - 5.235px));
+  font-size: min(43.98px, 13.089cqw);
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1;
+  letter-spacing: -0.02em;
   white-space: nowrap;
   transition:
     bottom 700ms cubic-bezier(0.65, 0, 0.35, 1),
@@ -217,8 +274,49 @@ a {
 }
 
 .card-stage.is-expanded .business-card__name {
-  bottom: 24px;
-  left: 24px;
+  bottom: 4.221%;
+}
+
+.business-card__contact {
+  position: absolute;
+  z-index: 3;
+  top: 4.221%;
+  left: 2.249%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  font-family: Arial, sans-serif;
+  font-size: min(12px, 3.57cqw);
+  line-height: 1.25;
+  transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.business-card__contact-link {
+  color: var(--card-foreground);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.business-card__contact-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.business-card__contact-link:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid var(--card-foreground);
+  outline-offset: 2px;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.contact-info a:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid var(--card-foreground);
+  outline-offset: 2px;
 }
 
 .social-links {
@@ -228,20 +326,11 @@ a {
   right: 2.249%;
   display: flex;
   align-items: flex-start;
-  gap: min(8.25px, calc(2.454vw - 0.982px));
-  transition:
-    top 700ms cubic-bezier(0.65, 0, 0.35, 1),
-    right 700ms cubic-bezier(0.65, 0, 0.35, 1),
-    gap 700ms cubic-bezier(0.65, 0, 0.35, 1),
-    transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  gap: min(8.25px, 2.455cqw);
+  transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.card-stage.is-expanded .social-links {
-  top: 24px;
-  right: 24px;
-  gap: 8.25px;
-}
-
+.business-card.is-active .business-card__contact,
 .business-card.is-active .business-card__name,
 .business-card.is-active .social-links {
   transform: translateZ(18px);
