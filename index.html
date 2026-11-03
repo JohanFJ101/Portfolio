@@ -33,18 +33,21 @@
         <article
           id="business-card"
           class="business-card"
-          aria-label="Johan Jagalur business card"
+          tabindex="0"
           aria-expanded="false"
+          aria-controls="portfolio-sections"
+          aria-label="Johan Jagalur business card"
         >
           <div class="business-card__contact">
             <a class="business-card__contact-link" href="tel:+16025009057"
               >+1 (602) 500 9057</a
             >
-            <a class="business-card__contact-link" href="mailto:johanj@asu.edu"
-              >johanj@asu.edu</a
+            <a class="business-card__contact-link" href="mailto:me@johanj.dev"
+              >me@johanj.dev</a
             >
           </div>
 
+          <img class="business-card__portrait" src="/src/Assets/portrait-cropped.png" alt="" aria-hidden="true" />
           <h1 class="business-card__name">Johan Jagalur.</h1>
 
           <nav class="social-links" aria-label="Social links">
@@ -67,6 +70,36 @@
               <img src="/assets/figma-image-3.png" alt="" />
             </a>
           </nav>
+
+
+          <div id="portfolio-sections" class="portfolio-sections" hidden>
+            <nav class="section-nav" aria-label="Portfolio sections">
+              <button type="button" class="section-nav__button is-selected" data-section="about" aria-current="page">About Me</button>
+              <button type="button" class="section-nav__button" data-section="experience">Experience</button>
+            </nav>
+            <div class="section-content">
+              <section data-panel="about" aria-label="About Me">
+                <p>Hello,</p>
+                <p>I am Johan, and this is placeholder text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is placeholder text for an introduction about me.</p>
+              </section>
+              <section data-panel="experience" aria-label="Experience" hidden>
+                <div class="experience-list">
+                  <div class="experience-item">
+                    <span class="experience-item__role">Full Stack Engineer</span>
+                    <span class="experience-item__company">@Uday Digital, Ksana</span>
+                  </div>
+                  <div class="experience-item">
+                    <span class="experience-item__role">IT Systems Support Engineer</span>
+                    <span class="experience-item__company">@ASU, Fulton Schools of Engineering</span>
+                  </div>
+                  <div class="experience-item">
+                    <span class="experience-item__role">VP of Technology</span>
+                    <span class="experience-item__company">@ASU, Startup Village</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
         </article>
       </div>
     </main>

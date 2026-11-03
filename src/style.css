@@ -7,7 +7,7 @@
 }
 
 :root {
-  --expanded-card-gap: clamp(16px, 4vw, 0.5in);
+  --expanded-card-gap: clamp(16px, 3vw, 0.6in);
   --page-background: #f9f6ee;
   --card-background: #0c0c0c;
   --card-foreground: #ffffff;
@@ -54,6 +54,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   min-width: 320px;
@@ -92,10 +96,6 @@ body::after {
   background-size: 320px 320px;
   opacity: calc(var(--page-grain-opacity) * 0.55);
   mix-blend-mode: var(--page-grain-blend);
-}
-
-body.card-expanded {
-  overflow: hidden;
 }
 
 button,
@@ -252,6 +252,48 @@ a {
   transition: none;
 }
 
+.business-card__portrait {
+  position: absolute;
+  z-index: 1;
+  left: 22%;
+  bottom: 2.5%;
+  width: 66%;
+  height: 86%;
+  object-fit: contain;
+  object-position: bottom;
+  transform: scale(0.37);
+  transform-origin: bottom center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.card-stage.is-expanded .business-card__portrait {
+  opacity: 1;
+  visibility: visible;
+  animation: reveal-portrait 940ms both;
+  left: 3.249%;
+  bottom: 6.721%;
+  width: 32%;
+  height: 46%;
+  object-position: bottom left;
+  transform-origin: bottom left;
+}
+
+@keyframes reveal-portrait {
+  0%, 74.46% { opacity: 0; visibility: hidden; }
+  74.47% { opacity: 0; visibility: visible; }
+  100% { opacity: 1; visibility: visible; }
+}
+
+@media (max-width: 600px) {
+  .card-stage.is-expanded .business-card__portrait {
+    left: 6%;
+    width: 44%;
+    height: 20%;
+  }
+}
+
 .business-card__name {
   position: absolute;
   z-index: 2;
@@ -275,6 +317,150 @@ a {
 
 .card-stage.is-expanded .business-card__name {
   bottom: 4.221%;
+  font-size: clamp(28px, 2.3vw, 44px);
+}
+
+.portfolio-sections {
+  position: absolute;
+  z-index: 3;
+  inset: 19% 5% 25%;
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(0, 2fr);
+  gap: 8%;
+  align-items: start;
+}
+
+.card-stage.is-expanded .portfolio-sections {
+  animation: reveal-portrait 940ms both;
+}
+
+.section-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.section-nav__button {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--card-foreground);
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(24px, 3vw, 48px);
+  text-align: left;
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+.section-nav__button.is-selected,
+.section-nav__button:hover {
+  opacity: 1;
+}
+
+.section-nav__button.is-selected {
+  transform: translateX(0.65em);
+}
+
+.section-nav__button.is-selected::before {
+  position: absolute;
+  left: -0.4em;
+  content: '•';
+}
+
+.section-nav__button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.section-content {
+  container-type: inline-size;
+  width: 100%;
+  max-width: 25ch;
+  justify-self: start;
+  max-height: 100%;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  color: var(--card-foreground);
+  font-size: clamp(20px, 2.5vw, 40px);
+  font-family: 'Anton', sans-serif;
+  line-height: 1.35;
+}
+
+.section-content::-webkit-scrollbar {
+  display: none;
+}
+
+.section-content:has([data-panel="experience"]:not([hidden])) {
+  max-width: none;
+}
+
+@media (min-width: 601px) {
+  .section-content:has([data-panel="experience"]:not([hidden])) {
+    width: calc(100% - clamp(24px, 3vw, 56px));
+    transform: translate(clamp(24px, 3vw, 56px), clamp(24px, 6vh, 64px));
+  }
+}
+
+.section-content p,
+.section-content ul {
+  margin: 0;
+}
+
+.section-content p + p {
+  margin-top: 1em;
+}
+
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 5vh, 3.5rem);
+  width: 100%;
+  max-width: 44ch;
+}
+
+.experience-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.experience-item__role {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(16px, 7cqw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--card-foreground);
+  white-space: nowrap;
+}
+
+.experience-item__company {
+  margin-top: 0.35em;
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(14px, 1.4vw, 22px);
+  line-height: 1.1;
+  color: var(--card-foreground);
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .portfolio-sections {
+    inset: 20% 7% 29%;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 1.5rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-stage.is-expanded .portfolio-sections { animation: none; }
+}
+
+.card-stage.is-expanded .business-card {
+  cursor: auto;
 }
 
 .business-card__contact {
@@ -396,7 +582,164 @@ a {
   outline-offset: 4px;
 }
 
+.card-close {
+  position: absolute;
+  z-index: 5;
+  top: 4.221%;
+  right: 2.249%;
+  padding: 4px 0;
+  border: 0;
+  color: var(--card-foreground);
+  background: transparent;
+  font: 16px Arial, sans-serif;
+  cursor: pointer;
+}
+
+.card-stage.is-expanded .social-links {
+  right: 100px;
+}
+
+.projects-view {
+  --project-row-height: clamp(96px, 19vh, 210px);
+
+  position: absolute;
+  inset: 14% 3% 14% 43%;
+  z-index: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  color: var(--card-foreground);
+}
+
+.projects-view.is-sliding {
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+
+.projects-view.is-sliding .projects-view__link {
+  transition: none;
+}
+
+.projects-view::-webkit-scrollbar {
+  display: none;
+}
+
+.projects-view::before,
+.projects-view::after {
+  display: block;
+  height: max(0px, calc(50% - var(--project-row-height) / 2));
+  content: '';
+}
+
+.projects-view,
+.project-detail {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.card-stage.is-expanded .projects-view,
+.card-stage.is-expanded .project-detail {
+  opacity: 1;
+  visibility: visible;
+  animation: reveal-projects 940ms both;
+}
+
+@keyframes reveal-projects {
+  0%, 74.46% { opacity: 0; visibility: hidden; }
+  74.47% { opacity: 0; visibility: visible; }
+  100% { opacity: 1; visibility: visible; }
+}
+
+.projects-view__link {
+  display: flex;
+  width: fit-content;
+  min-height: var(--project-row-height);
+  align-items: center;
+  color: inherit;
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(46px, 5.5vw, 104px);
+  font-weight: 400;
+  line-height: 1.1;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  transition: transform 100ms ease-out;
+  transform: scale(var(--project-scale, 0.55));
+  transform-origin: left center;
+}
+
+.project-detail__back:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.card-close:focus-visible,
+.projects-view:focus-visible,
+.projects-view__link:focus-visible,
+.project-detail__back:focus-visible {
+  outline: 2px solid var(--card-foreground);
+  outline-offset: 4px;
+}
+
+.project-detail {
+  position: absolute;
+  inset: 20% 8% 18%;
+  color: var(--card-foreground);
+}
+
+.project-detail__back {
+  color: inherit;
+  font: 16px Arial, sans-serif;
+}
+
+.project-detail__title {
+  margin: 1em 0 0;
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(48px, 8vw, 128px);
+  font-weight: 400;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 800px) {
+  .projects-view {
+    --project-row-height: clamp(88px, 17vh, 160px);
+
+    inset: 21% 5% 21%;
+  }
+
+  .projects-view__link {
+    font-size: clamp(36px, 8vw, 76px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  body,
+  .page-loader,
+  .card-stage,
+  .theme-toggle,
+  .theme-toggle__thumb,
+  .project-detail__title {
+    transition: none;
+  }
+
+  .projects-view,
+  .card-stage.is-expanded .projects-view,
+  .card-stage.is-expanded .project-detail,
+  .card-stage.is-expanded .business-card__portrait {
+    transition: none;
+    animation: none;
+    scroll-behavior: auto;
+  }
+
+  .projects-view__link {
+    transform: none;
+    transition: none;
+  }
+
   .page-loader__card {
     animation: none;
   }
@@ -411,11 +754,38 @@ a {
 
 @media (max-width: 600px) {
   body.card-expanded .theme-toggle {
-    top: 24px;
+    top: auto;
     right: 24px;
+    bottom: 24px;
   }
 
   .card-stage.is-expanded .social-links {
-    right: 72px;
+    top: 10%;
+    right: 5%;
+  }
+
+  .card-stage.is-expanded .social-link--linkedin,
+  .card-stage.is-expanded .social-link--github {
+    width: 28px;
+    height: 28px;
+  }
+
+  .card-close {
+    top: 3%;
+    right: 5%;
+  }
+
+  .card-stage.is-expanded .business-card__contact {
+    top: 10%;
+    left: 5%;
+    font-size: 12px;
+  }
+
+  .card-stage.is-expanded .business-card__name {
+    left: 5%;
+  }
+
+  .project-detail {
+    inset: 23% 5% 18%;
   }
 }

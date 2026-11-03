@@ -3,6 +3,9 @@ const cardStage = document.querySelector('.card-stage');
 const pageLoader = document.querySelector('.page-loader');
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const themeToggle = document.querySelector('.theme-toggle');
+const sections = document.querySelector('.portfolio-sections');
+const sectionButtons = [...sections.querySelectorAll('[data-section]')];
+const sectionPanels = [...sections.querySelectorAll('[data-panel]')];
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const loaderStartedAt = performance.now();
 
@@ -79,30 +82,68 @@ function setExpanded(expanded) {
 
   cardStage.classList.toggle('is-expanded', expanded);
   document.body.classList.toggle('card-expanded', expanded);
+  card.setAttribute('aria-label', expanded ? 'Johan Jagalur portfolio' : 'Johan Jagalur business card');
   card.setAttribute('aria-expanded', String(expanded));
 }
 
-function toggleExpanded() {
-  setExpanded(!cardStage.classList.contains('is-expanded'));
+function selectSection(name) {
+  sectionButtons.forEach((button) => {
+    const selected = button.dataset.section === name;
+    button.classList.toggle('is-selected', selected);
+    if (selected) button.setAttribute('aria-current', 'page');
+    else button.removeAttribute('aria-current');
+  });
+  sectionPanels.forEach((panel) => { panel.hidden = panel.dataset.panel !== name; });
 }
 
-function handleCardClick(event) {
-  if (event.target.closest('a')) return;
+function renderRoute() {
+  const expanded = location.hash === '#/projects';
+  setExpanded(expanded);
+  sections.hidden = !expanded;
+  if (expanded) selectSection('about');
+}
 
-  toggleExpanded();
+function closeCard() {
+  location.hash = '';
+  renderRoute();
+  card.focus();
 }
 
 card.addEventListener('pointerenter', startTilt);
 card.addEventListener('pointermove', queueTilt);
 card.addEventListener('pointerleave', resetTilt);
 card.addEventListener('pointercancel', resetTilt);
-card.addEventListener('click', handleCardClick);
-window.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && cardStage.classList.contains('is-expanded')) {
-    setExpanded(false);
+card.addEventListener('click', (event) => {
+  if (event.target.closest('a, button')) return;
+  if (cardStage.classList.contains('is-expanded')) {
+    if (event.target.matches('.business-card, .business-card__contact, .social-links')) closeCard();
+    return;
+  }
+  location.hash = '/projects';
+});
+card.addEventListener('keydown', (event) => {
+  if (event.target === card && !cardStage.classList.contains('is-expanded') &&
+      (event.key === 'Enter' || event.key === ' ')) {
+    event.preventDefault();
+    location.hash = '/projects';
   }
 });
+document.addEventListener('click', (event) => {
+  if (cardStage.classList.contains('is-expanded') &&
+      !card.contains(event.target) && !themeToggle.contains(event.target)) closeCard();
+});
+sectionButtons.forEach((button) => {
+  button.addEventListener('click', () => selectSection(button.dataset.section));
+});
+window.addEventListener('hashchange', () => {
+  renderRoute();
+  if (location.hash !== '#/projects') card.focus();
+});
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && cardStage.classList.contains('is-expanded')) closeCard();
+});
 reducedMotion.addEventListener('change', resetTilt);
+renderRoute();
 
 themeToggle.addEventListener('click', () => {
   const darkThemeEnabled = document.documentElement.classList.toggle('dark-theme');
