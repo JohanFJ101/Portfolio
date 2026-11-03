@@ -238,7 +238,7 @@ a {
   overflow: hidden;
   border-radius: min(18px, 3.681cqw);
   background: var(--card-background);
-  cursor: pointer;
+  cursor: default;
   transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) scale3d(var(--scale), var(--scale), var(--scale));
   transform-style: preserve-3d;
   transition:
